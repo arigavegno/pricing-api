@@ -11,6 +11,7 @@ public class ApiException extends Exception {
 
     public ApiException(String message) {
         super(message);
+        this.message = message;
     }
 
     public ApiException(Integer statusCode, String message, String error) {
