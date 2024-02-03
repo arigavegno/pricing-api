@@ -1,6 +1,6 @@
 package com.inditex.pricingapi.domain.models.entities;
 
-import com.inditex.pricingapi.domain.models.entities.enums.Currency;
+import com.inditex.pricingapi.domain.models.enums.Currency;
 
 import java.math.BigDecimal;
 import java.time.LocalDateTime;

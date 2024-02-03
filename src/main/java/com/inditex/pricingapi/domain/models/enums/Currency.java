@@ -1,4 +1,4 @@
-package com.inditex.pricingapi.domain.models.entities.enums;
+package com.inditex.pricingapi.domain.models.enums;
 
 public enum Currency {
     EUR,
