@@ -1,10 +1,20 @@
 package com.inditex.pricingapi.domain.services;
 
+import static org.junit.jupiter.api.Assertions.assertEquals;
+import static org.junit.jupiter.api.Assertions.assertThrows;
+import static org.mockito.Mockito.when;
+import static org.mockito.Mockito.mock;
+import static org.mockito.Mockito.reset;
+import static org.mockito.Mockito.doThrow;
+
 import com.inditex.pricingapi.domain.contracts.PriceSearchParam;
 import com.inditex.pricingapi.domain.exceptions.ApiException;
 import com.inditex.pricingapi.domain.exceptions.NotFoundApiException;
+import com.inditex.pricingapi.domain.models.entities.Brand;
 import com.inditex.pricingapi.domain.models.entities.Price;
+import com.inditex.pricingapi.domain.models.entities.Product;
 import com.inditex.pricingapi.domain.providers.IPriceRepository;
+
 import org.junit.jupiter.api.AfterEach;
 import org.junit.jupiter.api.BeforeAll;
 import org.junit.jupiter.api.Test;
@@ -17,13 +27,6 @@ import java.util.Arrays;
 import java.util.Collection;
 import java.util.Optional;
 
-import static org.junit.jupiter.api.Assertions.assertEquals;
-import static org.junit.jupiter.api.Assertions.assertThrows;
-import static org.mockito.Mockito.when;
-import static org.mockito.Mockito.mock;
-import static org.mockito.Mockito.reset;
-import static org.mockito.Mockito.doThrow;
-
 class PriceServiceImplTest {
 
     private static IPriceRepository mockedPriceRepository;
@@ -35,20 +38,30 @@ class PriceServiceImplTest {
     static void setup() {
         mockedPriceRepository = mock(IPriceRepository.class);
 
+        Brand brandZara = new Brand();
+        brandZara.setId(1L);
+        brandZara.setName("Zara");
+
+        Product productCamisa = new Product();
+        productCamisa.setId(35455L);
+        productCamisa.setName("CAMISA LINO FLORIAN MANGA LARGA");
+        productCamisa.setCode("ABC-12345");
+        productCamisa.setDescription("Esta camisa está confeccionada en 100% lino europeo.");
+
         priceItem1 = new Price();
-        priceItem1.setBrandID(1L);
-        priceItem1.setProductID(35455L);
-        priceItem1.setStart_date(LocalDateTime.of(2020, 6, 14, 0, 0, 0));
-        priceItem1.setEnd_date(LocalDateTime.of(2020, 12, 31, 23, 59, 59));
+        priceItem1.setBrand(brandZara);
+        priceItem1.setProduct(productCamisa);
+        priceItem1.setStartDate(LocalDateTime.of(2020, 6, 14, 0, 0, 0));
+        priceItem1.setEndDate(LocalDateTime.of(2020, 12, 31, 23, 59, 59));
         priceItem1.setPriceListID(1L);
         priceItem1.setPrice(BigDecimal.valueOf(35.5));
         priceItem1.setPriority(0);
 
         priceItem2 = new Price();
-        priceItem2.setBrandID(1L);
-        priceItem2.setProductID(35455L);
-        priceItem2.setStart_date(LocalDateTime.of(2020, 6, 14, 15, 0, 0));
-        priceItem2.setEnd_date(LocalDateTime.of(2020, 6, 14, 18, 30, 0));
+        priceItem2.setBrand(brandZara);
+        priceItem2.setProduct(productCamisa);
+        priceItem2.setStartDate(LocalDateTime.of(2020, 6, 14, 15, 0, 0));
+        priceItem2.setEndDate(LocalDateTime.of(2020, 6, 14, 18, 30, 0));
         priceItem2.setPriceListID(2L);
         priceItem2.setPrice(BigDecimal.valueOf(25.45));
         priceItem2.setPriority(1);
@@ -61,26 +74,26 @@ class PriceServiceImplTest {
         reset(mockedPriceRepository);
     }
 
-    @ParameterizedTest(name = "applyingDate: {0} - expectedPrice: {1}")
+    @ParameterizedTest(name = "applyAt: {0} - expectedPrice: {1}")
     @MethodSource("casesOfSuccessByAppliedDate")
-    void testGetByProductAndBrand_whenIsSuccess_shouldReturnPriceItem(LocalDateTime applyingDate, Price expectedPrice) throws ApiException {
+    void testGetByProductAndBrand_whenIsSuccess_shouldReturnPriceItem(LocalDateTime applyAt, Price expectedPrice) throws Exception {
         PriceSearchParam searchParam = new PriceSearchParam.Builder()
-                .applyingDate(applyingDate)
-                .productID(1L)
+                .applyAt(applyAt)
+                .productID(35455L)
                 .brandID(1L).build();
 
-        when(mockedPriceRepository.findByBrandAndProduct(searchParam)).thenReturn(Optional.of(expectedPrice));
+        when(mockedPriceRepository.findTopByBrandAndProductAndDate(searchParam)).thenReturn(Optional.of(expectedPrice));
 
-        Price result = service.getByBrandAndProduct(searchParam);
+        Price priceResult = service.getByBrandAndProduct(searchParam);
 
-        assertEquals(expectedPrice.getBrandID(), result.getBrandID());
-        assertEquals(expectedPrice.getProductID(), result.getProductID());
-        assertEquals(expectedPrice.getStart_date(), result.getStart_date());
-        assertEquals(expectedPrice.getEnd_date(), result.getEnd_date());
-        assertEquals(expectedPrice.getCurrency(), result.getCurrency());
-        assertEquals(expectedPrice.getPriority(), result.getPriority());
-        assertEquals(expectedPrice.getPrice(), result.getPrice());
-        assertEquals(expectedPrice.getPriceListID(), result.getPriceListID());
+        assertEquals(expectedPrice.getBrand(), priceResult.getBrand());
+        assertEquals(expectedPrice.getProduct(), priceResult.getProduct());
+        assertEquals(expectedPrice.getStartDate(), priceResult.getStartDate());
+        assertEquals(expectedPrice.getEndDate(), priceResult.getEndDate());
+        assertEquals(expectedPrice.getCurrency(), priceResult.getCurrency());
+        assertEquals(expectedPrice.getPriority(), priceResult.getPriority());
+        assertEquals(expectedPrice.getPrice(), priceResult.getPrice());
+        assertEquals(expectedPrice.getPriceListID(), priceResult.getPriceListID());
     }
 
     private static Collection casesOfSuccessByAppliedDate() {
@@ -93,14 +106,14 @@ class PriceServiceImplTest {
     }
 
     @Test
-    void testGetByProductAndBrand_whenPriceNotExists_shouldReturnNotFoundApiException() {
+    void testGetByProductAndBrand_whenPriceNotExists_shouldReturnNotFoundApiException() throws Exception {
         String errorMessage = "price not found";
         PriceSearchParam searchParam = new PriceSearchParam.Builder()
-                .applyingDate(LocalDateTime.now())
+                .applyAt(LocalDateTime.now())
                 .productID(43555L)
                 .brandID(1L).build();
 
-        when(mockedPriceRepository.findByBrandAndProduct(searchParam)).thenReturn(Optional.ofNullable(null));
+        when(mockedPriceRepository.findTopByBrandAndProductAndDate(searchParam)).thenReturn(Optional.ofNullable(null));
 
         ApiException exception = assertThrows(NotFoundApiException.class, () -> service.getByBrandAndProduct(searchParam));
 
@@ -108,18 +121,18 @@ class PriceServiceImplTest {
     }
 
     @Test
-    void testGetByProductAndBrand_whenProviderFails_shouldReturnApiException() {
+    void testGetByProductAndBrand_whenProviderFails_shouldReturnApiException() throws Exception {
         String errorMessage = "any database error";
 
         PriceSearchParam searchParam = new PriceSearchParam.Builder()
-                .applyingDate(LocalDateTime.now())
+                .applyAt(LocalDateTime.now())
                 .productID(2L)
                 .brandID(1L).build();
 
         Exception mockedException = mock(RuntimeException.class);
 
         when(mockedException.getMessage()).thenReturn(errorMessage);
-        doThrow(mockedException).when(mockedPriceRepository).findByBrandAndProduct(searchParam);
+        doThrow(mockedException).when(mockedPriceRepository).findTopByBrandAndProductAndDate(searchParam);
 
         ApiException exception = assertThrows(ApiException.class, () -> service.getByBrandAndProduct(searchParam));
 

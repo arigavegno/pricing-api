@@ -19,7 +19,7 @@ public class PriceServiceImpl implements IPriceService {
     @Override
     public Price getByBrandAndProduct(PriceSearchParam searchParam) throws ApiException {
         try {
-            Optional<Price> price = priceRepository.findByBrandAndProduct(searchParam);
+            Optional<Price> price = priceRepository.findTopByBrandAndProductAndDate(searchParam);
 
             return price
                     .orElseThrow(() -> new NotFoundApiException("price not found"));
