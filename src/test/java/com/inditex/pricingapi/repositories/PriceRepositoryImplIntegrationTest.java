@@ -40,9 +40,9 @@ class PriceRepositoryImplIntegrationTest {
 
         Product productCamisa = new Product();
         productCamisa.setId(35455L);
-        productCamisa.setName("CAMISA LINO FLORIAN MANGA LARGA");
-        productCamisa.setCode("ABC-12345");
-        productCamisa.setDescription("Esta camisa está confeccionada en 100% lino europeo.");
+        productCamisa.setName("PANTALON CHUPIN MORADO");
+        productCamisa.setCode("ABC111");
+        productCamisa.setDescription("Este pantalon es lo mas top.");
 
         Price expectedPrice = new Price();
         expectedPrice.setBrand(brandZara);
@@ -63,7 +63,11 @@ class PriceRepositoryImplIntegrationTest {
 
         assertNotNull(result);
         assertEquals(expectedPrice.getBrand().getId(), result.get().getBrand().getId());
+        assertEquals(expectedPrice.getBrand().getName(), result.get().getBrand().getName());
         assertEquals(expectedPrice.getProduct().getId(), result.get().getProduct().getId());
+        assertEquals(expectedPrice.getProduct().getName(), result.get().getProduct().getName());
+        assertEquals(expectedPrice.getProduct().getCode(), result.get().getProduct().getCode());
+        assertEquals(expectedPrice.getProduct().getDescription(), result.get().getProduct().getDescription());
         assertEquals(expectedPrice.getStartDate(), result.get().getStartDate());
         assertEquals(expectedPrice.getEndDate(), result.get().getEndDate());
         assertEquals(expectedPrice.getCurrency(), result.get().getCurrency());

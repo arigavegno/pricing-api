@@ -1,7 +1,7 @@
 INSERT INTO brands (name,created_at,updated_at) VALUES ('Zara', now(), now());
 
 INSERT INTO products (id, name,description,code,created_at,updated_at)
-VALUES (35455, 'CAMISA LINO FLORIAN MANGA LARGA','Esta camisa está confeccionada en 100% lino europeo.','ABC12345',now(),now());
+VALUES (35455, 'PANTALON CHUPIN MORADO','Este pantalon es lo mas top.','ABC111',now(),now());
 
 INSERT INTO price_lists (description, rate, created_at, updated_at)
 VALUES ('Precio tarifa 1', 0.5, now(), now()),
