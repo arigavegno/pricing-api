@@ -1,43 +1,73 @@
 package com.inditex.pricingapi.domain.models.entities;
 
 import com.inditex.pricingapi.domain.models.enums.Currency;
+import jakarta.persistence.Column;
+import jakarta.persistence.Entity;
+import jakarta.persistence.Enumerated;
+import jakarta.persistence.JoinColumn;
+import jakarta.persistence.ManyToOne;
+import jakarta.persistence.Table;
+import jakarta.persistence.Temporal;
+import jakarta.persistence.TemporalType;
+import jakarta.persistence.EnumType;
 
 import java.math.BigDecimal;
 import java.time.LocalDateTime;
 
-public class Price {
+@Entity
+@Table(name = "prices")
+public class Price extends BaseEntity {
 
-    private Long brandID;
-    private LocalDateTime start_date;
-    private LocalDateTime end_date;
+    @ManyToOne
+    @JoinColumn(name = "brand_id")
+    private Brand brand;
+
+    @Temporal(TemporalType.TIMESTAMP)
+    @Column(name = "start_date")
+    private LocalDateTime startDate;
+
+    @Temporal(TemporalType.TIMESTAMP)
+    @Column(name = "end_date")
+    private LocalDateTime endDate;
+
+    @Column(name = "price_list_id")
     private Long priceListID;
-    private Long productID;
+
+    @ManyToOne
+    @JoinColumn(name = "product_id")
+    private Product product;
+
     private Integer priority;
+
     private BigDecimal price;
+
+    @Enumerated(EnumType.STRING)
     private Currency currency;
 
-    public Long getBrandID() {
-        return brandID;
+    private static final long serialVersionUID = 1L;
+
+    public Brand getBrand() {
+        return brand;
     }
 
-    public void setBrandID(Long brandID) {
-        this.brandID = brandID;
+    public void setBrand(Brand brand) {
+        this.brand = brand;
     }
 
-    public LocalDateTime getStart_date() {
-        return start_date;
+    public LocalDateTime getStartDate() {
+        return startDate;
     }
 
-    public void setStart_date(LocalDateTime start_date) {
-        this.start_date = start_date;
+    public void setStartDate(LocalDateTime startDate) {
+        this.startDate = startDate;
     }
 
-    public LocalDateTime getEnd_date() {
-        return end_date;
+    public LocalDateTime getEndDate() {
+        return endDate;
     }
 
-    public void setEnd_date(LocalDateTime end_date) {
-        this.end_date = end_date;
+    public void setEndDate(LocalDateTime endDate) {
+        this.endDate = endDate;
     }
 
     public Long getPriceListID() {
@@ -48,12 +78,12 @@ public class Price {
         this.priceListID = priceListID;
     }
 
-    public Long getProductID() {
-        return productID;
+    public Product getProduct() {
+        return product;
     }
 
-    public void setProductID(Long productID) {
-        this.productID = productID;
+    public void setProduct(Product product) {
+        this.product = product;
     }
 
     public Integer getPriority() {

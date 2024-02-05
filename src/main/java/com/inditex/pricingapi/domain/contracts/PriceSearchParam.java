@@ -4,18 +4,22 @@ import java.time.LocalDateTime;
 
 public class PriceSearchParam {
 
-    private LocalDateTime applyingDate;
+    private LocalDateTime applyAt;
     private Long productID;
     private Long brandID;
 
     private PriceSearchParam(Builder builder) {
-        this.applyingDate = builder.applyingDate;
+        this.applyAt = builder.applyAt;
         this.productID = builder.productID;
         this.brandID = builder.brandID;
     }
 
-    public LocalDateTime getAppliedDate() {
-        return applyingDate;
+    public LocalDateTime getApplyAt() {
+        return applyAt;
+    }
+
+    public void setApplyAt(LocalDateTime applyAt) {
+        this.applyAt = applyAt;
     }
 
     public Long getProductID() {
@@ -26,14 +30,18 @@ public class PriceSearchParam {
         return brandID;
     }
 
+    public static Builder Builder() {
+        return new Builder();
+    }
+
     public static class Builder {
 
-        private LocalDateTime applyingDate;
+        private LocalDateTime applyAt;
         private Long productID;
         private Long brandID;
 
-        public Builder applyingDate(LocalDateTime date) {
-            this.applyingDate = date;
+        public Builder applyAt(LocalDateTime date) {
+            this.applyAt = date;
             return this;
         }
 

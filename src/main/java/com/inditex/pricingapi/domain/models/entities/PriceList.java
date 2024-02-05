@@ -1,18 +1,27 @@
 package com.inditex.pricingapi.domain.models.entities;
 
+import jakarta.persistence.Column;
+import jakarta.persistence.Entity;
+import jakarta.persistence.Table;
 import java.math.BigDecimal;
 
-public class PriceList {
+@Entity
+@Table(name = "price_lists")
+public class PriceList extends BaseEntity {
 
-    private Long id;
+    @Column(length = 2000)
+    private String description;
+
     private BigDecimal rate;
 
-    public Long getId() {
-        return id;
+    private static final long serialVersionUID = 1L;
+
+    public String getDescription() {
+        return description;
     }
 
-    public void setId(Long id) {
-        this.id = id;
+    public void setDescription(String description) {
+        this.description = description;
     }
 
     public BigDecimal getRate() {

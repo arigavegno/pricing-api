@@ -1,16 +1,29 @@
 package com.inditex.pricingapi.domain.models.entities;
 
-public class Product {
+import jakarta.persistence.Column;
+import jakarta.persistence.Entity;
+import jakarta.persistence.Table;
 
-    private Long id;
+@Entity
+@Table(name = "products")
+public class Product extends BaseEntity {
+
+    @Column(length = 50)
+    private String name;
+
     private String description;
 
-    public Long getId() {
-        return id;
+    @Column(length = 50)
+    private String code;
+
+    private static long serialVersionUID = 1L;
+
+    public String getName() {
+        return name;
     }
 
-    public void setId(Long id) {
-        this.id = id;
+    public void setName(String name) {
+        this.name = name;
     }
 
     public String getDescription() {
@@ -19,5 +32,13 @@ public class Product {
 
     public void setDescription(String description) {
         this.description = description;
+    }
+
+    public String getCode() {
+        return code;
+    }
+
+    public void setCode(String code) {
+        this.code = code;
     }
 }

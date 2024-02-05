@@ -1,17 +1,17 @@
 package com.inditex.pricingapi.domain.models.entities;
 
-public class Brand {
+import jakarta.persistence.Column;
+import jakarta.persistence.Entity;
+import jakarta.persistence.Table;
 
-    private Long id;
+@Entity
+@Table(name = "brands")
+public class Brand extends BaseEntity {
+
+    @Column(length = 50)
     private String name;
 
-    public Long getId() {
-        return id;
-    }
-
-    public void setId(Long id) {
-        this.id = id;
-    }
+    private static final long serialVersionUID = 1L;
 
     public String getName() {
         return name;
