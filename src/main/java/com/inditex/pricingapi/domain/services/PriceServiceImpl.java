@@ -8,16 +8,21 @@ import com.inditex.pricingapi.domain.contracts.PriceSearchParam;
 
 import java.util.Optional;
 
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.stereotype.Service;
+
+@Service
 public class PriceServiceImpl implements IPriceService {
 
     private IPriceRepository priceRepository;
 
+    @Autowired
     public PriceServiceImpl(IPriceRepository priceRepository) {
         this.priceRepository = priceRepository;
     }
 
     @Override
-    public Price getByBrandAndProduct(PriceSearchParam searchParam) throws ApiException {
+    public Price getByBrandAndProductAndDate(PriceSearchParam searchParam) throws ApiException {
         try {
             Optional<Price> price = priceRepository.findTopByBrandAndProductAndDate(searchParam);
 

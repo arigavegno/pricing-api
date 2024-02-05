@@ -84,7 +84,7 @@ class PriceServiceImplTest {
 
         when(mockedPriceRepository.findTopByBrandAndProductAndDate(searchParam)).thenReturn(Optional.of(expectedPrice));
 
-        Price priceResult = service.getByBrandAndProduct(searchParam);
+        Price priceResult = service.getByBrandAndProductAndDate(searchParam);
 
         assertEquals(expectedPrice.getBrand(), priceResult.getBrand());
         assertEquals(expectedPrice.getProduct(), priceResult.getProduct());
@@ -115,7 +115,7 @@ class PriceServiceImplTest {
 
         when(mockedPriceRepository.findTopByBrandAndProductAndDate(searchParam)).thenReturn(Optional.ofNullable(null));
 
-        ApiException exception = assertThrows(NotFoundApiException.class, () -> service.getByBrandAndProduct(searchParam));
+        ApiException exception = assertThrows(NotFoundApiException.class, () -> service.getByBrandAndProductAndDate(searchParam));
 
         assertEquals(errorMessage, exception.getMessage());
     }
@@ -134,7 +134,7 @@ class PriceServiceImplTest {
         when(mockedException.getMessage()).thenReturn(errorMessage);
         doThrow(mockedException).when(mockedPriceRepository).findTopByBrandAndProductAndDate(searchParam);
 
-        ApiException exception = assertThrows(ApiException.class, () -> service.getByBrandAndProduct(searchParam));
+        ApiException exception = assertThrows(ApiException.class, () -> service.getByBrandAndProductAndDate(searchParam));
 
         assertEquals(errorMessage, exception.getMessage());
     }

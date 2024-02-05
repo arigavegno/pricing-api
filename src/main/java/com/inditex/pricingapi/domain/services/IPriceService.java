@@ -6,5 +6,5 @@ import com.inditex.pricingapi.domain.contracts.PriceSearchParam;
 
 public interface IPriceService {
 
-    Price getByBrandAndProduct(PriceSearchParam searchParam) throws ApiException;
+    Price getByBrandAndProductAndDate(PriceSearchParam searchParam) throws ApiException;
 }
