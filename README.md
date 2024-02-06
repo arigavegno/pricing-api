@@ -1,5 +1,4 @@
-# Pricing API
-Esta API 
+# Pricing API 
 
 ## Responsabilidades
 - [Consulta de precios](docs/diagrams/search_prices_flow.png): la búsqueda de precios se puede realizar por producto, 
