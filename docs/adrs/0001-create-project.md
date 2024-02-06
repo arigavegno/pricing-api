@@ -1,4 +1,4 @@
-# 1. Create project from scratch
+# 1. Create project
 
 Date: 2024-01-06
 
