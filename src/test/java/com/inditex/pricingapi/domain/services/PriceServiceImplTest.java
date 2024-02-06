@@ -2,6 +2,8 @@ package com.inditex.pricingapi.domain.services;
 
 import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertThrows;
+import static org.mockito.Mockito.times;
+import static org.mockito.Mockito.verify;
 import static org.mockito.Mockito.when;
 import static org.mockito.Mockito.mock;
 import static org.mockito.Mockito.reset;
@@ -94,6 +96,7 @@ class PriceServiceImplTest {
         assertEquals(expectedPrice.getPriority(), priceResult.getPriority());
         assertEquals(expectedPrice.getPrice(), priceResult.getPrice());
         assertEquals(expectedPrice.getPriceListID(), priceResult.getPriceListID());
+        verify(mockedPriceRepository, times(1)).findTopByBrandAndProductAndDate(searchParam);
     }
 
     private static Collection casesOfSuccessByAppliedDate() {
@@ -118,6 +121,7 @@ class PriceServiceImplTest {
         ApiException exception = assertThrows(NotFoundApiException.class, () -> service.getByBrandAndProductAndDate(searchParam));
 
         assertEquals(errorMessage, exception.getMessage());
+        verify(mockedPriceRepository, times(1)).findTopByBrandAndProductAndDate(searchParam);
     }
 
     @Test
@@ -137,5 +141,6 @@ class PriceServiceImplTest {
         ApiException exception = assertThrows(ApiException.class, () -> service.getByBrandAndProductAndDate(searchParam));
 
         assertEquals(errorMessage, exception.getMessage());
+        verify(mockedPriceRepository, times(1)).findTopByBrandAndProductAndDate(searchParam);
     }
 }

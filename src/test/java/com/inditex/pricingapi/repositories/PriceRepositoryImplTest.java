@@ -6,6 +6,7 @@ import static org.junit.jupiter.api.Assertions.assertThrows;
 import static org.mockito.Mockito.doThrow;
 import static org.mockito.Mockito.mock;
 import static org.mockito.Mockito.reset;
+import static org.mockito.Mockito.times;
 import static org.mockito.Mockito.verify;
 import static org.mockito.Mockito.when;
 
@@ -47,7 +48,7 @@ class PriceRepositoryImplTest {
     }
 
     @Test
-    void testFindTopByBrandAndProductAndDate_whenIsSuccess() {
+    void testFindTopByBrandAndProductAndDate_whenIsSuccess_shouldReturnOptionalPrice() {
         PriceSearchParam searchParam = new PriceSearchParam.Builder()
                 .applyAt(LocalDateTime.of(2020, 6, 14, 16, 30, 0))
                 .productID(35455L)
@@ -74,13 +75,13 @@ class PriceRepositoryImplTest {
         assertEquals(expectedPrice.getPrice(), priceResult.get().getPrice());
 
         ArgumentCaptor<String> hqlCaptor = ArgumentCaptor.forClass(String.class);
-        verify(entityManagerMock).createQuery(hqlCaptor.capture());
+        verify(entityManagerMock, times(1)).createQuery(hqlCaptor.capture());
         String queryHQL = hqlCaptor.getValue();
         assertEquals(searchQuery, queryHQL);
     }
 
     @Test
-    void testFindTopByBrandAndProductAndDate_whenDataBaseThrowsAnException() {
+    void testFindTopByBrandAndProductAndDate_whenDataBaseThrowsAnException_shouldThrowsException() {
         PriceSearchParam searchParam = new PriceSearchParam.Builder()
                 .applyAt(LocalDateTime.of(2020, 6, 14, 16, 30, 0))
                 .productID(35455L)
@@ -93,5 +94,6 @@ class PriceRepositoryImplTest {
         Exception exceptionThrown = assertThrows(HibernateException.class, () -> repository.findTopByBrandAndProductAndDate(searchParam));
 
         assertEquals(dataSourceException, exceptionThrown);
+        verify(entityManagerMock, times(1)).createQuery(searchQuery);
     }
 }
