@@ -1,6 +1,8 @@
 package com.inditex.pricingapi.domain.contracts;
 
+import com.inditex.pricingapi.domain.models.constants.DateTime;
 import java.time.LocalDateTime;
+import java.time.format.DateTimeFormatter;
 
 public class PriceSearchParam {
 
@@ -16,10 +18,6 @@ public class PriceSearchParam {
 
     public LocalDateTime getApplyAt() {
         return applyAt;
-    }
-
-    public void setApplyAt(LocalDateTime applyAt) {
-        this.applyAt = applyAt;
     }
 
     public Long getProductID() {
@@ -40,9 +38,13 @@ public class PriceSearchParam {
         private Long productID;
         private Long brandID;
 
-        public Builder applyAt(LocalDateTime date) {
-            this.applyAt = date;
+        public Builder applyAt(LocalDateTime applyAt) {
+            this.applyAt = applyAt;
             return this;
+        }
+
+        public Builder applyAt(String applyAtStr) {
+            return applyAt(LocalDateTime.parse(applyAtStr, DateTimeFormatter.ofPattern(DateTime.DATE_FORMAT_PATTERN)));
         }
 
         public Builder productID(Long productID) {
@@ -50,9 +52,17 @@ public class PriceSearchParam {
             return this;
         }
 
+        public Builder productID(String productIDStr) {
+            return productID(Long.parseLong(productIDStr));
+        }
+
         public Builder brandID(Long brandID) {
             this.brandID = brandID;
             return this;
+        }
+
+        public Builder brandID(String brandIDStr) {
+            return brandID(Long.parseLong(brandIDStr));
         }
 
         public PriceSearchParam build() {
